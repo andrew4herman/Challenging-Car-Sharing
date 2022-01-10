@@ -15,7 +15,6 @@ public class CompanyDao {
     public final String GET_BY_ID = "SELECT * FROM company WHERE id = ?;";
     public final String GET_All = "SELECT * FROM company;";
     public final String SAVE_COMPANY = "INSERT INTO company(name) VALUES(?);";
-    public final String DELETE_BY_ID = "DELETE FROM company WHERE id = ?;";
     public final String GET_LAST_ID = "SELECT MAX(id) as last_id FROM company;";
 
     private final DBManager manager;
@@ -69,18 +68,6 @@ public class CompanyDao {
             return ++lastCompanyId;
         } catch (SQLException e) {
             throw new RuntimeException("Cannot save company " + name, e);
-        }
-    }
-
-    public void delete(int id) {
-        try (PreparedStatement stmt =
-                     manager.getConnection().prepareStatement(DELETE_BY_ID)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-
-            manager.getConnection().commit();
-        } catch (SQLException e) {
-            throw new RuntimeException("Cannot delete company with id " + id, e);
         }
     }
 

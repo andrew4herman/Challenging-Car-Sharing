@@ -16,7 +16,6 @@ public class CarDao {
     private static final String GET_ALL = "SELECT * FROM car;";
     private static final String GET_ALL_UNRENTED_CARS = "SELECT * FROM car WHERE is_rented = false;";
     private static final String SAVE_CAR = "INSERT INTO car(name, company_id) VALUES(?, ?);";
-    private static final String DELETE_BY_ID = "DELETE FROM car WHERE id = ?;";
     private static final String GET_LAST_ID = "SELECT MAX(id) as last_id FROM car;";
 
     private final DBManager manager;
@@ -97,18 +96,6 @@ public class CarDao {
             return ++lastCarId;
         } catch (SQLException e) {
             throw new RuntimeException("Cannot save car %s from company %d".formatted(name, companyId), e);
-        }
-    }
-
-    public void delete(int id) {
-        try (PreparedStatement stmt =
-                     manager.getConnection().prepareStatement(DELETE_BY_ID)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-
-            manager.getConnection().commit();
-        } catch (SQLException e) {
-            throw new RuntimeException("Cannot delete car with id" + id, e);
         }
     }
 
