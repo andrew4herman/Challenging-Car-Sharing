@@ -1,10 +1,14 @@
 package carsharing.model;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@AllArgsConstructor
 public class Customer {
     private int id;
     private String name;
+    @Setter
     private int rentedCarId;
 }
