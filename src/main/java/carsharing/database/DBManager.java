@@ -17,6 +17,7 @@ public class DBManager {
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 name VARCHAR(255) NOT NULL UNIQUE,
                 company_id INT NOT NULL,
+                is_rented BOOLEAN NOT NULL,
                 FOREIGN KEY (company_id) REFERENCES company(id)
             );""";
     public static final String CREATE_TABLE_CUSTOMER = """
