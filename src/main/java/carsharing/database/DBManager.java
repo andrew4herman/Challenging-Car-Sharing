@@ -27,10 +27,15 @@ public class DBManager {
                 FOREIGN KEY (rented_car_id) REFERENCES car(id)
             );""";
 
+    private final String USER;
+    private final String PASSWORD;
     private final String URL;
     private Connection connection;
 
     public DBManager(String fileName) {
+        USER = "root";
+        PASSWORD = "hyperskill";
+
         String JDBC_DRIVER = "jdbc:h2:";
         String FILE_PATH = "./src/main/java/carsharing/db/";
         URL = JDBC_DRIVER + FILE_PATH + fileName;
@@ -53,7 +58,7 @@ public class DBManager {
 
     private void tryToCreateConnection() {
         try {
-            this.connection = DriverManager.getConnection(URL);
+            this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
             this.connection.setAutoCommit(false);
         } catch (SQLException e) {
             throw new RuntimeException("Cannot create a connection with database!", e);
