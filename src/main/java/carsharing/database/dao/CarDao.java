@@ -14,7 +14,7 @@ public class CarDao {
 
     private static final String GET_BY_ID = "SELECT * FROM car WHERE id = ?;";
     private static final String GET_ALL = "SELECT * FROM car;";
-    private static final String GET_ALL_UNRENTED_CARS = "SELECT * FROM car WHERE is_rented = false;";
+    private static final String GET_CARS_BY_AVAILABILITY = "SELECT * FROM car WHERE is_rented = ?;";
     private static final String SAVE_CAR = "INSERT INTO car(name, company_id) VALUES(?, ?);";
     private static final String GET_LAST_ID = "SELECT MAX(id) as last_id FROM car;";
 
@@ -65,10 +65,11 @@ public class CarDao {
         return cars;
     }
 
-    public List<Car> getAllAvailableCars() {
+    public List<Car> getCarsByAvailability(boolean rented) {
         List<Car> cars = new ArrayList<>();
         try (PreparedStatement stmt =
-                     manager.getConnection().prepareStatement(GET_ALL_UNRENTED_CARS)) {
+                     manager.getConnection().prepareStatement(GET_CARS_BY_AVAILABILITY)) {
+            stmt.setBoolean(1, rented);
             ResultSet resultSet = stmt.executeQuery();
 
             while (resultSet.next()) {
@@ -79,7 +80,7 @@ public class CarDao {
                         resultSet.getBoolean("is_rented")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot get all available cars from database", e);
+            throw new RuntimeException("Cannot get all rented/unrented cars from database", e);
         }
 
         return cars;
