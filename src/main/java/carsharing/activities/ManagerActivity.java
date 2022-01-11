@@ -2,10 +2,14 @@ package carsharing.activities;
 
 import carsharing.database.dao.CarDao;
 import carsharing.database.dao.CompanyDao;
+import carsharing.model.Company;
+import carsharing.util.ChooserUtils;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
-public class ManagerActivity extends Activity{
+public class ManagerActivity extends Activity {
 
     private final CompanyDao companyDao;
     private final CarDao carDao;
@@ -36,7 +40,13 @@ public class ManagerActivity extends Activity{
     }
 
     private void chooseCompanyOption() {
-
+        List<Company> companies = companyDao.getAll();
+        if (companies.isEmpty()) {
+            System.out.println("The company list is empty!");
+        } else {
+            chooseCompanyFrom(companyDao.getAll()).ifPresent(
+                    company -> new CompanyActivity(scanner, company, carDao).start());
+        }
     }
 
     private void createCompanyOption() {
@@ -45,5 +55,17 @@ public class ManagerActivity extends Activity{
 
         companyDao.save(companyName);
         System.out.println("The company was created!");
+    }
+
+    private Optional<Company> chooseCompanyFrom(List<Company> companies) {
+        do {
+            ChooserUtils.outputEntities(companies);
+            try {
+                int option = Integer.parseInt(scanner.nextLine());
+                return ChooserUtils.chooseEntityFrom(companies, option);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Incorrect input. Try again or return back.");
+            }
+        } while (true);
     }
 }
