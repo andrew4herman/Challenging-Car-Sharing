@@ -3,7 +3,9 @@ package carsharing.activities;
 import carsharing.database.dao.CarDao;
 import carsharing.model.Car;
 import carsharing.model.Company;
+import carsharing.util.ChooserUtils;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class CompanyActivity extends Activity {
@@ -20,6 +22,7 @@ public class CompanyActivity extends Activity {
     @Override
     protected void showMenu() {
         System.out.println("""
+                
                 1. Car list
                 2. Create a car
                 0. Back
@@ -37,7 +40,13 @@ public class CompanyActivity extends Activity {
     }
 
     private void showCarListOption() {
-        
+        List<Car> cars = carDao.getAllCars();
+        if (cars.isEmpty()) {
+            System.out.println("The car list is empty!");
+        } else {
+            System.out.println("Car list:");
+            ChooserUtils.outputEntities(cars);
+        }
     }
 
     private void createCarOption() {

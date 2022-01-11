@@ -9,7 +9,6 @@ import carsharing.util.ChooserUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.IntStream;
 
 public class MainActivity extends Activity {
 
@@ -27,6 +26,7 @@ public class MainActivity extends Activity {
     @Override
     protected void showMenu() {
         System.out.println("""
+                
                 1. Log in as a manager
                 2. Log in as a customer
                 3. Create a customer
@@ -70,6 +70,7 @@ public class MainActivity extends Activity {
     private Optional<Customer> chooseCustomerFrom(List<Customer> customers) {
         do {
             ChooserUtils.outputEntities(customers);
+            System.out.println("0. Back");
             try {
                 int option = Integer.parseInt(scanner.nextLine());
                 return ChooserUtils.chooseEntityFrom(customers, option);

@@ -14,7 +14,6 @@ public class ChooserUtils {
         IntStream.iterate(0, i -> i + 1)
                 .limit(list.size())
                 .forEach(i -> System.out.printf("%d. %s%n", i + 1, list.get(i).getName()));
-        System.out.println("0. Back");
     }
 
     public <T extends Entity> Optional<T> chooseEntityFrom(List<T> list, int option) {

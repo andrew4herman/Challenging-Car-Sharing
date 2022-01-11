@@ -23,6 +23,7 @@ public class ManagerActivity extends Activity {
     @Override
     protected void showMenu() {
         System.out.println("""
+                
                 1. Company list
                 2. Create a company
                 0. Back
@@ -47,7 +48,7 @@ public class ManagerActivity extends Activity {
             System.out.println("Choose the company:");
             chooseCompanyFrom(companyDao.getAll()).ifPresent(
                     company -> {
-                        System.out.printf("'%s' company%n", company.getName());
+                        System.out.printf("'%s' company", company.getName());
                         new CompanyActivity(scanner, company, carDao).start();
                     });
         }
@@ -64,11 +65,12 @@ public class ManagerActivity extends Activity {
     private Optional<Company> chooseCompanyFrom(List<Company> companies) {
         do {
             ChooserUtils.outputEntities(companies);
+            System.out.println("0. Back");
             try {
                 int option = Integer.parseInt(scanner.nextLine());
                 return ChooserUtils.chooseEntityFrom(companies, option);
             } catch (IllegalArgumentException e) {
-                System.out.println("Incorrect input. Try again or return back.");
+                System.out.println("Incorrect input. Try again or return back.\n");
             }
         } while (true);
     }
