@@ -1,11 +1,7 @@
 package carsharing.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
-public class Company {
-    private int id;
-    private String name;
+public class Company extends Entity {
+    public Company(int id, String name) {
+        super(id, name);
+    }
 }

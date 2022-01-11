@@ -1,14 +1,15 @@
 package carsharing.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@AllArgsConstructor
-public class Customer {
-    private int id;
-    private String name;
+public class Customer extends Entity{
+    @Getter
     @Setter
     private int rentedCarId;
+
+    public Customer(int id, String name, int rentedCarId) {
+        super(id, name);
+        this.rentedCarId = rentedCarId;
+    }
 }
