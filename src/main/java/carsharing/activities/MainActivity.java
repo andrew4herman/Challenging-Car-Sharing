@@ -3,6 +3,7 @@ package carsharing.activities;
 import carsharing.database.dao.CarDao;
 import carsharing.database.dao.CompanyDao;
 import carsharing.database.dao.CustomerDao;
+import carsharing.model.Customer;
 
 import java.util.Scanner;
 
@@ -49,7 +50,11 @@ public class MainActivity implements Activity {
     }
 
     private void createCustomerOption() {
+        System.out.println("\nEnter the customer name:");
+        String name = scanner.nextLine();
 
+        customerDao.save(name);
+        System.out.println("The customer was added!");
     }
 
     private void logInAsCustomer() {
