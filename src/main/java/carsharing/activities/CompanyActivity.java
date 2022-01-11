@@ -1,6 +1,7 @@
 package carsharing.activities;
 
 import carsharing.database.dao.CarDao;
+import carsharing.model.Car;
 import carsharing.model.Company;
 
 import java.util.Scanner;
@@ -31,14 +32,19 @@ public class CompanyActivity extends Activity {
             case "0" -> System.out.println("Exited from company.");
             case "1" -> showCarListOption();
             case "2" -> createCarOption();
+            default -> System.out.println("Incorrect option. Try again.");
         }
     }
 
     private void showCarListOption() {
-
+        
     }
 
     private void createCarOption() {
+        System.out.println("\nEnter the car name:");
+        String carName = scanner.nextLine();
 
+        carDao.save(carName, currentCompany.getId());
+        System.out.println("The car was added!");
     }
 }
