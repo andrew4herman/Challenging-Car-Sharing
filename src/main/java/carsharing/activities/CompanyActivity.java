@@ -18,11 +18,27 @@ public class CompanyActivity extends Activity {
 
     @Override
     protected void showMenu() {
-
+        System.out.println("""
+                1. Car list
+                2. Create a car
+                0. Back
+                """);
     }
 
     @Override
     protected void processOption(String option) {
+        switch (option) {
+            case "0" -> System.out.println("Exited from company.");
+            case "1" -> showCarListOption();
+            case "2" -> createCarOption();
+        }
+    }
+
+    private void showCarListOption() {
+
+    }
+
+    private void createCarOption() {
 
     }
 }
