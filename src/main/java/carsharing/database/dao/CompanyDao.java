@@ -12,10 +12,10 @@ import java.util.Optional;
 
 public class CompanyDao {
 
-    public final String GET_BY_ID = "SELECT * FROM company WHERE id = ?;";
-    public final String GET_All = "SELECT * FROM company;";
-    public final String SAVE_COMPANY = "INSERT INTO company(name) VALUES(?);";
-    public final String GET_LAST_ID = "SELECT MAX(id) as last_id FROM company;";
+    private final String GET_BY_ID = "SELECT * FROM company WHERE id = ?;";
+    private final String GET_All = "SELECT * FROM company;";
+    private final String SAVE_COMPANY = "INSERT INTO company(name) VALUES(?);";
+    private final String GET_LAST_ID = "SELECT MAX(id) as last_id FROM company;";
 
     private final DBManager manager;
     private int lastCompanyId;
