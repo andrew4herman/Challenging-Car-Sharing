@@ -21,10 +21,28 @@ public class CustomerActivity extends Activity {
 
     @Override
     protected void showMenu() {
+        System.out.println("""
+                1. Company list
+                2. Create a company
+                0. Back
+                """);
     }
 
     @Override
     protected void processOption(String option) {
+        switch (option) {
+            case "0" -> System.out.println("Logged out!");
+            case "1" -> chooseCompanyOption();
+            case "2" -> createCompanyOption();
+            default -> System.out.println("Incorrect option. Try again!");
+        }
+    }
+
+    private void chooseCompanyOption() {
+
+    }
+
+    private void createCompanyOption() {
 
     }
 }
