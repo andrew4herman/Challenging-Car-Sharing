@@ -17,14 +17,11 @@ public class CarDao {
     private static final String GET_CARS_BY_AVAILABILITY = "SELECT * FROM car WHERE is_rented = ?;";
     private static final String SAVE_CAR = "INSERT INTO car(name, company_id) VALUES(?, ?);";
     private static final String UPDATE_BY_ID = "UPDATE car SET is_rented = ? WHERE ID = ?;";
-    private static final String GET_LAST_ID = "SELECT MAX(id) as last_id FROM car;";
 
     private final DBManager manager;
-    private int lastCarId;
 
     public CarDao(DBManager manager) {
         this.manager = manager;
-        this.lastCarId = getLastCarId();
     }
 
     public Optional<Car> getById(int id) {
@@ -87,7 +84,7 @@ public class CarDao {
         return cars;
     }
 
-    public int save(String name, int companyId) {
+    public void save(String name, int companyId) {
         try (PreparedStatement stmt =
                      manager.getConnection().prepareStatement(SAVE_CAR)) {
             stmt.setString(1, name);
@@ -95,7 +92,6 @@ public class CarDao {
             stmt.executeUpdate();
 
             manager.getConnection().commit();
-            return ++lastCarId;
         } catch (SQLException e) {
             throw new RuntimeException("Cannot save car %s from company %d".formatted(name, companyId), e);
         }
@@ -112,21 +108,5 @@ public class CarDao {
         } catch (SQLException e) {
             throw new RuntimeException("Cannot update car with id " + id, e);
         }
-    }
-
-    private int getLastCarId() {
-        int lastId = 0;
-        try (PreparedStatement stmt =
-                     manager.getConnection().prepareStatement(GET_LAST_ID)) {
-            ResultSet resultSet = stmt.executeQuery();
-
-            if (resultSet.next()) {
-                lastId = resultSet.getInt("last_id");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Cannot get id of the last car", e);
-        }
-
-        return lastId;
     }
 }

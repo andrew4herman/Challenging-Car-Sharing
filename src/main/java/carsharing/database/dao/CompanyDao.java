@@ -12,17 +12,14 @@ import java.util.Optional;
 
 public class CompanyDao {
 
-    private final String GET_BY_ID = "SELECT * FROM company WHERE id = ?;";
-    private final String GET_All = "SELECT * FROM company;";
-    private final String SAVE_COMPANY = "INSERT INTO company(name) VALUES(?);";
-    private final String GET_LAST_ID = "SELECT MAX(id) as last_id FROM company;";
+    private static final String GET_BY_ID = "SELECT * FROM company WHERE id = ?;";
+    private static final String GET_All = "SELECT * FROM company;";
+    private static final String SAVE_COMPANY = "INSERT INTO company(name) VALUES(?);";
 
     private final DBManager manager;
-    private int lastCompanyId;
 
     public CompanyDao(DBManager manager) {
         this.manager = manager;
-        this.lastCompanyId = getLastCompanyId();
     }
 
     public Optional<Company> getById(int id) {
@@ -58,32 +55,15 @@ public class CompanyDao {
         return companies;
     }
 
-    public int save(String name) {
+    public void save(String name) {
         try (PreparedStatement stmt =
                      manager.getConnection().prepareStatement(SAVE_COMPANY)) {
             stmt.setString(1, name);
             stmt.executeUpdate();
 
             manager.getConnection().commit();
-            return ++lastCompanyId;
         } catch (SQLException e) {
             throw new RuntimeException("Cannot save company " + name, e);
         }
-    }
-
-    private int getLastCompanyId() {
-        int lastId = 0;
-        try (PreparedStatement stmt =
-                     manager.getConnection().prepareStatement(GET_LAST_ID)) {
-            ResultSet resultSet = stmt.executeQuery();
-
-            if (resultSet.next()) {
-                lastId = resultSet.getInt("last_id");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Cannot get id of the last company", e);
-        }
-
-        return lastId;
     }
 }
