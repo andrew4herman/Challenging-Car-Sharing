@@ -10,31 +10,21 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
-public class MainActivity implements Activity {
+public class MainActivity extends Activity {
 
     private final CompanyDao companyDao;
     private final CarDao carDao;
     private final CustomerDao customerDao;
-    private final Scanner scanner;
 
-    public MainActivity(CompanyDao companyDao, CarDao carDao, CustomerDao customerDao) {
+    public MainActivity(Scanner scanner, CompanyDao companyDao, CarDao carDao, CustomerDao customerDao) {
+        super(scanner);
         this.companyDao = companyDao;
         this.carDao = carDao;
         this.customerDao = customerDao;
-        this.scanner = new Scanner(System.in);
     }
 
     @Override
-    public void start() {
-        String option;
-        do {
-            showMenu();
-            option = scanner.nextLine();
-            processOption(option);
-        } while (!"0".equals(option));
-    }
-
-    private void showMenu() {
+    public void showMenu() {
         System.out.println("""
                 1. Log in as a manager
                 2. Log in as a customer
@@ -43,7 +33,8 @@ public class MainActivity implements Activity {
                 """);
     }
 
-    private void processOption(String option) {
+    @Override
+    public void processOption(String option) {
         switch (option) {
             case "0" -> System.out.println("Bye!");
             case "1" -> logInAsManager();
@@ -67,12 +58,12 @@ public class MainActivity implements Activity {
             System.out.println("The customer list is empty!");
         } else {
             chooseCustomerFrom(customers).ifPresent(
-                    customer -> new CustomerActivity(customer, companyDao, carDao, scanner).start());
+                    customer -> new CustomerActivity(scanner, customer, companyDao, carDao).start());
         }
     }
 
     private void logInAsManager() {
-        new ManagerActivity(companyDao, carDao, customerDao, scanner).start();
+        new ManagerActivity(scanner, companyDao, carDao, customerDao).start();
     }
 
     private Optional<Customer> chooseCustomerFrom(List<Customer> customers) {

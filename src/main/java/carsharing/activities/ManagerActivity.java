@@ -6,22 +6,26 @@ import carsharing.database.dao.CustomerDao;
 
 import java.util.Scanner;
 
-public class ManagerActivity implements Activity{
+public class ManagerActivity extends Activity{
 
     private final CompanyDao companyDao;
     private final CarDao carDao;
     private final CustomerDao customerDao;
-    private final Scanner scanner;
 
-    public ManagerActivity(CompanyDao companyDao, CarDao carDao, CustomerDao customerDao, Scanner scanner) {
+    public ManagerActivity(Scanner scanner, CompanyDao companyDao, CarDao carDao, CustomerDao customerDao) {
+        super(scanner);
         this.companyDao = companyDao;
         this.carDao = carDao;
         this.customerDao = customerDao;
-        this.scanner = scanner;
     }
 
     @Override
-    public void start() {
-        
+    public void showMenu() {
+
+    }
+
+    @Override
+    public void processOption(String option) {
+
     }
 }

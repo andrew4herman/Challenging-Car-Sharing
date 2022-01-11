@@ -6,22 +6,26 @@ import carsharing.model.Customer;
 
 import java.util.Scanner;
 
-public class CustomerActivity implements Activity {
+public class CustomerActivity extends Activity {
 
     private final Customer currentCustomer;
     private final CompanyDao companyDao;
     private final CarDao carDao;
-    private final Scanner scanner;
 
-    public CustomerActivity(Customer customer, CompanyDao companyDao, CarDao carDao, Scanner scanner) {
+    public CustomerActivity(Scanner scanner, Customer customer, CompanyDao companyDao, CarDao carDao) {
+        super(scanner);
         this.currentCustomer = customer;
         this.companyDao = companyDao;
         this.carDao = carDao;
-        this.scanner = scanner;
     }
 
     @Override
-    public void start() {
+    public void showMenu() {
+
+    }
+
+    @Override
+    public void processOption(String option) {
 
     }
 }
