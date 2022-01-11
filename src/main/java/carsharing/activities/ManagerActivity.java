@@ -44,6 +44,7 @@ public class ManagerActivity extends Activity {
         if (companies.isEmpty()) {
             System.out.println("The company list is empty!");
         } else {
+            System.out.println("Choose the company:");
             chooseCompanyFrom(companyDao.getAll()).ifPresent(
                     company -> {
                         System.out.printf("'%s' company%n", company.getName());
