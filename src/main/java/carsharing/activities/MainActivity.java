@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
     @Override
     protected void showMenu() {
         System.out.println("""
-                
+                                
                 1. Log in as a manager
                 2. Log in as a customer
                 3. Create a customer
@@ -45,12 +45,8 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void createCustomerOption() {
-        System.out.println("\nEnter the customer name:");
-        String name = scanner.nextLine();
-
-        customerDao.save(name);
-        System.out.println("The customer was added!");
+    private void logInAsManager() {
+        new ManagerActivity(scanner, companyDao, carDao).start();
     }
 
     private void logInAsCustomer() {
@@ -63,8 +59,12 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void logInAsManager() {
-        new ManagerActivity(scanner, companyDao, carDao).start();
+    private void createCustomerOption() {
+        System.out.println("\nEnter the customer name:");
+        String name = scanner.nextLine();
+
+        customerDao.save(name);
+        System.out.println("The customer was added!");
     }
 
     private Optional<Customer> chooseCustomerFrom(List<Customer> customers) {

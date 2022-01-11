@@ -23,7 +23,7 @@ public class ManagerActivity extends Activity {
     @Override
     protected void showMenu() {
         System.out.println("""
-                
+                                
                 1. Company list
                 2. Create a company
                 0. Back
