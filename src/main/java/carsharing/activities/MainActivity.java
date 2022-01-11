@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
     }
 
     private void logInAsManager() {
-        new ManagerActivity(scanner, companyDao, carDao, customerDao).start();
+        new ManagerActivity(scanner, companyDao, carDao).start();
     }
 
     private Optional<Customer> chooseCustomerFrom(List<Customer> customers) {
