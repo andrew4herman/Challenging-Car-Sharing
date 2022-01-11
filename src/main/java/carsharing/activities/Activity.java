@@ -10,7 +10,7 @@ public abstract class Activity {
         this.scanner = scanner;
     }
 
-    public void start() {
+    public final void start() {
         String option;
         do {
             showMenu();
