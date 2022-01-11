@@ -35,9 +35,6 @@ public class CustomerDao {
             if (resultSet.next()) {
                 String name = resultSet.getString("name");
                 int rentedCarId = resultSet.getInt("rented_car_id");
-                if (resultSet.wasNull()) {
-                    rentedCarId = -1;
-                }
 
                 return Optional.of(new Customer(id, name, rentedCarId));
             }
@@ -57,9 +54,6 @@ public class CustomerDao {
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
                 int rentedCarId = resultSet.getInt("rented_car_id");
-                if (resultSet.wasNull()) {
-                    rentedCarId = -1;
-                }
 
                 customers.add(new Customer(id, name, rentedCarId));
             }
