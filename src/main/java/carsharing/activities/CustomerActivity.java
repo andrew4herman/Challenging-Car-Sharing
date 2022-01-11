@@ -2,6 +2,7 @@ package carsharing.activities;
 
 import carsharing.database.dao.CarDao;
 import carsharing.database.dao.CompanyDao;
+import carsharing.model.Company;
 import carsharing.model.Customer;
 
 import java.util.Scanner;
@@ -43,6 +44,10 @@ public class CustomerActivity extends Activity {
     }
 
     private void createCompanyOption() {
+        System.out.println("\nEnter the company name:");
+        String companyName = scanner.nextLine();
 
+        companyDao.save(companyName);
+        System.out.println("The company was created!");
     }
 }
