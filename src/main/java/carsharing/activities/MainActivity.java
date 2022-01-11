@@ -5,7 +5,6 @@ import carsharing.database.dao.CompanyDao;
 import carsharing.database.dao.CustomerDao;
 import carsharing.model.Customer;
 
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -50,6 +49,7 @@ public class MainActivity implements Activity {
             case "1" -> logInAsManager();
             case "2" -> logInAsCustomer();
             case "3" -> createCustomerOption();
+            default -> System.out.println("Incorrect option. Try again.");
         }
     }
 
@@ -72,7 +72,7 @@ public class MainActivity implements Activity {
     }
 
     private void logInAsManager() {
-
+        new ManagerActivity(companyDao, carDao, customerDao, scanner).start();
     }
 
     private Optional<Customer> chooseCustomerFrom(List<Customer> customers) {
