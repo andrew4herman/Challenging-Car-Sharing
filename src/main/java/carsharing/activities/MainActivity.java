@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public void showMenu() {
+    protected void showMenu() {
         System.out.println("""
                 1. Log in as a manager
                 2. Log in as a customer
@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public void processOption(String option) {
+    protected void processOption(String option) {
         switch (option) {
             case "0" -> System.out.println("Bye!");
             case "1" -> logInAsManager();

@@ -19,7 +19,7 @@ public abstract class Activity {
         } while (!"0".equals(option));
     }
 
-    public abstract void showMenu();
+    protected abstract void showMenu();
 
-    public abstract void processOption(String option);
+    protected abstract void processOption(String option);
 }

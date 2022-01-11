@@ -20,12 +20,11 @@ public class CustomerActivity extends Activity {
     }
 
     @Override
-    public void showMenu() {
-
+    protected void showMenu() {
     }
 
     @Override
-    public void processOption(String option) {
+    protected void processOption(String option) {
 
     }
 }
