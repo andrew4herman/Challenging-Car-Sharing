@@ -45,7 +45,10 @@ public class ManagerActivity extends Activity {
             System.out.println("The company list is empty!");
         } else {
             chooseCompanyFrom(companyDao.getAll()).ifPresent(
-                    company -> new CompanyActivity(scanner, company, carDao).start());
+                    company -> {
+                        System.out.printf("'%s' company%n", company.getName());
+                        new CompanyActivity(scanner, company, carDao).start();
+                    });
         }
     }
 
