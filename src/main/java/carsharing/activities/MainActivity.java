@@ -5,7 +5,11 @@ import carsharing.database.dao.CompanyDao;
 import carsharing.database.dao.CustomerDao;
 import carsharing.model.Customer;
 
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class MainActivity implements Activity {
 
@@ -58,10 +62,39 @@ public class MainActivity implements Activity {
     }
 
     private void logInAsCustomer() {
-
+        List<Customer> customers = customerDao.getAllCustomers();
+        if (customers.isEmpty()) {
+            System.out.println("The customer list is empty!");
+        } else {
+            chooseCustomerFrom(customers).ifPresent(
+                    customer -> new CustomerActivity(customer, companyDao, carDao, scanner).start());
+        }
     }
 
     private void logInAsManager() {
 
+    }
+
+    private Optional<Customer> chooseCustomerFrom(List<Customer> customers) {
+        do {
+            IntStream.iterate(0, i -> i + 1)
+                    .limit(customers.size())
+                    .forEach(i -> System.out.printf("%d. %s%n", i + 1, customers.get(i).getName()));
+            System.out.println("0. Back");
+
+            try {
+                int option = Integer.parseInt(scanner.nextLine());
+
+                if (option > 0 && option <= customers.size()) {
+                    return Optional.of(customers.get(option - 1));
+                } else if (option == 0) {
+                    return Optional.empty();
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("Incorrect input. Try again or return back.");
+            }
+        } while (true);
     }
 }
