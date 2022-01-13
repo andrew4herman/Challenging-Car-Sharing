@@ -2,7 +2,7 @@ package carsharing;
 
 import carsharing.activities.MainActivity;
 import carsharing.database.DBConnector;
-import carsharing.database.dao.DBManager;
+import carsharing.database.DBManager;
 import carsharing.util.CliParser;
 
 import java.util.Optional;

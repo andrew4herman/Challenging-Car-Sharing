@@ -1,6 +1,6 @@
 package carsharing.activities;
 
-import carsharing.database.dao.DBManager;
+import carsharing.database.DBManager;
 import carsharing.model.Customer;
 import carsharing.util.ChooserUtils;
 

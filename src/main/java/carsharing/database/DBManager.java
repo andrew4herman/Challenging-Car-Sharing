@@ -1,6 +1,8 @@
-package carsharing.database.dao;
+package carsharing.database;
 
-import carsharing.database.DBConnector;
+import carsharing.database.dao.CarDao;
+import carsharing.database.dao.CompanyDao;
+import carsharing.database.dao.CustomerDao;
 
 import java.sql.Connection;
 import java.sql.SQLException;
