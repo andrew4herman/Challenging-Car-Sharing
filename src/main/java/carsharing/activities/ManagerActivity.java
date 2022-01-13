@@ -1,23 +1,19 @@
 package carsharing.activities;
 
-import carsharing.database.dao.CarDao;
-import carsharing.database.dao.CompanyDao;
+import carsharing.database.dao.DBManager;
 import carsharing.model.Company;
 import carsharing.util.ChooserUtils;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class ManagerActivity extends Activity {
 
-    private final CompanyDao companyDao;
-    private final CarDao carDao;
+    private final DBManager dbManager;
 
-    public ManagerActivity(Scanner scanner, CompanyDao companyDao, CarDao carDao) {
+    public ManagerActivity(Scanner scanner, DBManager dbManager) {
         super(scanner);
-        this.companyDao = companyDao;
-        this.carDao = carDao;
+        this.dbManager = dbManager;
     }
 
     @Override
@@ -41,15 +37,15 @@ public class ManagerActivity extends Activity {
     }
 
     private void chooseCompanyOption() {
-        List<Company> companies = companyDao.getAll();
+        List<Company> companies = dbManager.getCompanyDao().getAll();
         if (companies.isEmpty()) {
             System.out.println("The company list is empty!");
         } else {
             System.out.println("Choose the company:");
-            chooseCompanyFrom(companyDao.getAll()).ifPresent(
+            ChooserUtils.chooseEntityFrom(companies, scanner).ifPresent(
                     company -> {
                         System.out.printf("'%s' company", company.getName());
-                        new CompanyActivity(scanner, company, carDao).start();
+                        new CompanyActivity(scanner, dbManager, company).start();
                     });
         }
     }
@@ -58,20 +54,7 @@ public class ManagerActivity extends Activity {
         System.out.println("\nEnter the company name:");
         String companyName = scanner.nextLine();
 
-        companyDao.save(companyName);
+        dbManager.getCompanyDao().save(companyName);
         System.out.println("The company was created!");
-    }
-
-    private Optional<Company> chooseCompanyFrom(List<Company> companies) {
-        do {
-            ChooserUtils.outputEntities(companies);
-            System.out.println("0. Back");
-            try {
-                int option = Integer.parseInt(scanner.nextLine());
-                return ChooserUtils.chooseEntityFrom(companies, option);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Incorrect input. Try again or return back.\n");
-            }
-        } while (true);
     }
 }

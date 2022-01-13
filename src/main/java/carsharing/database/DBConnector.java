@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DBManager {
+public class DBConnector {
 
     public static final String CREATE_TABLE_COMPANY = """
             CREATE TABLE IF NOT EXISTS company(
@@ -33,7 +33,7 @@ public class DBManager {
     private final String URL;
     private Connection connection;
 
-    public DBManager(String fileName) {
+    public DBConnector(String fileName) {
         USER = "root";
         PASSWORD = "hyperskill";
 

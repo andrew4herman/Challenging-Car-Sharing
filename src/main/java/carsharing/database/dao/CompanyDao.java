@@ -1,6 +1,6 @@
 package carsharing.database.dao;
 
-import carsharing.database.DBManager;
+import carsharing.database.DBConnector;
 import carsharing.model.Company;
 
 import java.sql.PreparedStatement;
@@ -16,15 +16,15 @@ public class CompanyDao {
     private static final String GET_All = "SELECT * FROM company;";
     private static final String SAVE_COMPANY = "INSERT INTO company(name) VALUES(?);";
 
-    private final DBManager manager;
+    private final DBConnector dbConnector;
 
-    public CompanyDao(DBManager manager) {
-        this.manager = manager;
+    public CompanyDao(DBConnector dbConnector) {
+        this.dbConnector = dbConnector;
     }
 
     public Optional<Company> getById(int id) {
         try (PreparedStatement stmt =
-                     manager.getConnection().prepareStatement(GET_BY_ID)) {
+                     dbConnector.getConnection().prepareStatement(GET_BY_ID)) {
             stmt.setInt(1, id);
             ResultSet resultSet = stmt.executeQuery();
 
@@ -41,7 +41,7 @@ public class CompanyDao {
     public List<Company> getAll() {
         List<Company> companies = new ArrayList<>();
         try (PreparedStatement stmt =
-                     manager.getConnection().prepareStatement(GET_All)) {
+                     dbConnector.getConnection().prepareStatement(GET_All)) {
             ResultSet resultSet = stmt.executeQuery();
 
             while (resultSet.next()) {
@@ -57,11 +57,11 @@ public class CompanyDao {
 
     public void save(String name) {
         try (PreparedStatement stmt =
-                     manager.getConnection().prepareStatement(SAVE_COMPANY)) {
+                     dbConnector.getConnection().prepareStatement(SAVE_COMPANY)) {
             stmt.setString(1, name);
             stmt.executeUpdate();
 
-            manager.getConnection().commit();
+            dbConnector.getConnection().commit();
         } catch (SQLException e) {
             throw new RuntimeException("Cannot save company " + name, e);
         }

@@ -1,26 +1,19 @@
 package carsharing.activities;
 
-import carsharing.database.dao.CarDao;
-import carsharing.database.dao.CompanyDao;
-import carsharing.database.dao.CustomerDao;
+import carsharing.database.dao.DBManager;
 import carsharing.model.Customer;
 import carsharing.util.ChooserUtils;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class MainActivity extends Activity {
 
-    private final CompanyDao companyDao;
-    private final CarDao carDao;
-    private final CustomerDao customerDao;
+    private final DBManager dbManager;
 
-    public MainActivity(Scanner scanner, CompanyDao companyDao, CarDao carDao, CustomerDao customerDao) {
+    public MainActivity(Scanner scanner, DBManager dbManager) {
         super(scanner);
-        this.companyDao = companyDao;
-        this.carDao = carDao;
-        this.customerDao = customerDao;
+        this.dbManager = dbManager;
     }
 
     @Override
@@ -46,16 +39,17 @@ public class MainActivity extends Activity {
     }
 
     private void logInAsManager() {
-        new ManagerActivity(scanner, companyDao, carDao).start();
+        new ManagerActivity(scanner, dbManager).start();
     }
 
     private void logInAsCustomer() {
-        List<Customer> customers = customerDao.getAllCustomers();
+        List<Customer> customers = dbManager.getCustomerDao().getAllCustomers();
         if (customers.isEmpty()) {
             System.out.println("The customer list is empty!");
         } else {
-            chooseCustomerFrom(customers).ifPresent(
-                    customer -> new CustomerActivity(scanner, customer, companyDao, carDao).start());
+            System.out.println("The customer list:");
+            ChooserUtils.chooseEntityFrom(customers, scanner).ifPresent(
+                    customer -> new CustomerActivity(scanner, dbManager, customer).start());
         }
     }
 
@@ -63,20 +57,7 @@ public class MainActivity extends Activity {
         System.out.println("\nEnter the customer name:");
         String name = scanner.nextLine();
 
-        customerDao.save(name);
+        dbManager.getCustomerDao().save(name);
         System.out.println("The customer was added!");
-    }
-
-    private Optional<Customer> chooseCustomerFrom(List<Customer> customers) {
-        do {
-            ChooserUtils.outputEntities(customers);
-            System.out.println("0. Back");
-            try {
-                int option = Integer.parseInt(scanner.nextLine());
-                return ChooserUtils.chooseEntityFrom(customers, option);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Incorrect input. Try again or return back.");
-            }
-        } while (true);
     }
 }

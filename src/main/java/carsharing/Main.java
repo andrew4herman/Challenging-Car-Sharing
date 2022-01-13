@@ -1,10 +1,8 @@
 package carsharing;
 
 import carsharing.activities.MainActivity;
-import carsharing.database.DBManager;
-import carsharing.database.dao.CarDao;
-import carsharing.database.dao.CompanyDao;
-import carsharing.database.dao.CustomerDao;
+import carsharing.database.DBConnector;
+import carsharing.database.dao.DBManager;
 import carsharing.util.CliParser;
 
 import java.util.Optional;
@@ -15,15 +13,15 @@ public class Main {
         Optional<String> fileName = new CliParser(args).optionOf("-fileName");
 
         if (fileName.isPresent()) {
-            DBManager dbManager = new DBManager(fileName.get());
-            CompanyDao companyDao = new CompanyDao(dbManager);
-            CarDao carDao = new CarDao(dbManager);
-            CustomerDao customerDao = new CustomerDao(dbManager);
+            DBConnector dbConnector = new DBConnector(fileName.get());
+            DBManager dbManager = new DBManager(dbConnector);
+            Scanner scanner = new Scanner(System.in);
 
-            MainActivity mainActivity = new MainActivity(new Scanner(System.in), companyDao, carDao, customerDao);
+            MainActivity mainActivity = new MainActivity(scanner, dbManager);
             mainActivity.start();
 
-            dbManager.closeConnection();
+            dbConnector.closeConnection();
+            scanner.close();
         } else {
             throw new IllegalArgumentException("Incorrect option for -fileName");
         }

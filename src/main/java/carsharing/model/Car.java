@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 public class Car extends Entity {
+
     private final int companyId;
     @Setter
     private boolean rented;
