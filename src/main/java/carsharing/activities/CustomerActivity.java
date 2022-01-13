@@ -37,7 +37,7 @@ public class CustomerActivity extends Activity {
             case "0" -> System.out.printf("Logged out from '%s'%n", currentCustomer.getName());
             case "1" -> rentCarOption();
             case "2" -> returnRentedCarOption();
-            case "3" -> showRentedCarInfo();
+            case "3" -> showRentedCarOption();
             default -> System.out.println("Incorrect option. Try again!");
         }
     }
@@ -64,23 +64,12 @@ public class CustomerActivity extends Activity {
         }
     }
 
-    private void showRentedCarInfo() {
+    private void showRentedCarOption() {
         if (hasRentedCar()) {
             dbManager.getCarDao().getById(currentCustomer.getRentedCarId()).ifPresent(this::outputInfoAbout);
         } else {
             System.out.println("You didn't rent a car!");
         }
-    }
-
-    private void outputInfoAbout(Car car) {
-        String companyName = dbManager.getCompanyDao().getById(car.getCompanyId()).orElseThrow().getName();
-        System.out.printf("""
-                                
-                Your rented car:
-                %s
-                Company:
-                %s
-                """, car.getName(), companyName);
     }
 
     private void chooseCar(Company company) {
@@ -103,6 +92,21 @@ public class CustomerActivity extends Activity {
         System.out.println("You've returned a rented car!");
     }
 
+    private void outputInfoAbout(Car car) {
+        String companyName = dbManager.getCompanyDao().getById(car.getCompanyId()).orElseThrow().getName();
+        System.out.printf("""
+                                
+                Your rented car:
+                %s
+                Company:
+                %s
+                """, car.getName(), companyName);
+    }
+
+    private boolean hasRentedCar() {
+        return currentCustomer.getRentedCarId() != 0;
+    }
+
     private void rentCar(Car car) {
         dbManager.makeTransaction(() -> {
             dbManager.getCustomerDao().updateCustomer(currentCustomer.getId(), car.getId());
@@ -111,9 +115,5 @@ public class CustomerActivity extends Activity {
         currentCustomer.setRentedCarId(car.getId());
 
         System.out.printf("%nYou rented '%s'%n", car.getName());
-    }
-
-    private boolean hasRentedCar() {
-        return currentCustomer.getRentedCarId() != 0;
     }
 }

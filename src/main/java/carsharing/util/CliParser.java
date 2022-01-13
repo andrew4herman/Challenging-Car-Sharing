@@ -13,15 +13,15 @@ public class CliParser {
         parse(arguments);
     }
 
+    public Optional<String> optionOf(String arg) {
+        return Optional.ofNullable(argValues.get(arg));
+    }
+
     private void parse(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("-")) {
                 argValues.put(args[i], args[i + 1]);
             }
         }
-    }
-
-    public Optional<String> optionOf(String arg) {
-        return Optional.ofNullable(argValues.get(arg));
     }
 }

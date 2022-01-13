@@ -7,12 +7,12 @@ import java.sql.Statement;
 
 public class DBConnector {
 
-    public static final String CREATE_TABLE_COMPANY = """
+    private static final String CREATE_TABLE_COMPANY = """
             CREATE TABLE IF NOT EXISTS company(
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 name VARCHAR(64) UNIQUE NOT NULL
             );""";
-    public static final String CREATE_TABLE_CAR = """
+    private static final String CREATE_TABLE_CAR = """
             CREATE TABLE IF NOT EXISTS car(
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 name VARCHAR(64) NOT NULL UNIQUE,
@@ -20,7 +20,7 @@ public class DBConnector {
                 is_rented BOOLEAN NOT NULL DEFAULT FALSE,
                 FOREIGN KEY (company_id) REFERENCES company(id)
             );""";
-    public static final String CREATE_TABLE_CUSTOMER = """
+    private static final String CREATE_TABLE_CUSTOMER = """
             CREATE TABLE IF NOT EXISTS customer(
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 name VARCHAR(64) NOT NULL UNIQUE,
@@ -31,6 +31,7 @@ public class DBConnector {
     private final String USER;
     private final String PASSWORD;
     private final String URL;
+
     private Connection connection;
 
     public DBConnector(String fileName) {
@@ -45,15 +46,13 @@ public class DBConnector {
         createTables();
     }
 
-    private void createTables() {
-        try (Statement statement = getConnection().createStatement()) {
-            statement.executeUpdate(CREATE_TABLE_COMPANY);
-            statement.executeUpdate(CREATE_TABLE_CAR);
-            statement.executeUpdate(CREATE_TABLE_CUSTOMER);
-
-            getConnection().commit();
-        } catch (SQLException e) {
-            throw new RuntimeException("Cannot create table", e);
+    public void closeConnection() {
+        if (this.connection != null) {
+            try {
+                this.connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException("Cannot close a connection with database!", e);
+            }
         }
     }
 
@@ -66,17 +65,19 @@ public class DBConnector {
         }
     }
 
-    public Connection getConnection() {
-        return this.connection;
+    private void createTables() {
+        try (Statement statement = getConnection().createStatement()) {
+            statement.executeUpdate(CREATE_TABLE_COMPANY);
+            statement.executeUpdate(CREATE_TABLE_CAR);
+            statement.executeUpdate(CREATE_TABLE_CUSTOMER);
+
+            getConnection().commit();
+        } catch (SQLException e) {
+            throw new RuntimeException("Cannot create table", e);
+        }
     }
 
-    public void closeConnection() {
-        if (this.connection != null) {
-            try {
-                this.connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException("Cannot close a connection with database!", e);
-            }
-        }
+    public Connection getConnection() {
+        return this.connection;
     }
 }

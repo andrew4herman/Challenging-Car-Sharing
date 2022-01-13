@@ -11,12 +11,6 @@ import java.util.stream.IntStream;
 @UtilityClass
 public class ChooserUtils {
 
-    public <T extends Entity> void outputEntities(List<T> list) {
-        IntStream.iterate(0, i -> i + 1)
-                .limit(list.size())
-                .forEach(i -> System.out.printf("%d. %s%n", i + 1, list.get(i).getName()));
-    }
-
     public <T extends Entity> Optional<T> chooseEntityFrom(List<T> list, Scanner scanner) {
         do {
             ChooserUtils.outputEntities(list);
@@ -28,6 +22,12 @@ public class ChooserUtils {
                 System.out.println("Incorrect input. Try again or return back.\n");
             }
         } while (true);
+    }
+
+    public <T extends Entity> void outputEntities(List<T> list) {
+        IntStream.iterate(0, i -> i + 1)
+                .limit(list.size())
+                .forEach(i -> System.out.printf("%d. %s%n", i + 1, list.get(i).getName()));
     }
 
     private <T extends Entity> Optional<T> parseOption(List<T> list, int option) {
