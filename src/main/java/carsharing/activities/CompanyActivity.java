@@ -1,6 +1,6 @@
 package carsharing.activities;
 
-import carsharing.database.DBManager;
+import carsharing.database.dao.DaoContainer;
 import carsharing.model.Car;
 import carsharing.model.Company;
 import carsharing.util.ChooserUtils;
@@ -10,12 +10,12 @@ import java.util.Scanner;
 
 public class CompanyActivity extends Activity {
 
-    private final DBManager dbManager;
+    private final DaoContainer daoContainer;
     private final Company currentCompany;
 
-    public CompanyActivity(Scanner scanner, DBManager dbManager, Company company) {
+    public CompanyActivity(Scanner scanner, DaoContainer daoContainer, Company company) {
         super(scanner);
-        this.dbManager = dbManager;
+        this.daoContainer = daoContainer;
         this.currentCompany = company;
     }
 
@@ -40,7 +40,7 @@ public class CompanyActivity extends Activity {
     }
 
     private void showCarListOption() {
-        List<Car> cars = dbManager.getCarDao().getAllCarsFrom(currentCompany.getId());
+        List<Car> cars = daoContainer.getCarDao().getAllCarsFrom(currentCompany.getId());
         if (cars.isEmpty()) {
             System.out.println("The car list is empty!");
         } else {
@@ -53,7 +53,7 @@ public class CompanyActivity extends Activity {
         System.out.println("\nEnter the car name:");
         String carName = scanner.nextLine();
 
-        dbManager.getCarDao().save(carName, currentCompany.getId());
+        daoContainer.getCarDao().save(carName, currentCompany.getId());
         System.out.println("The car was added!");
     }
 }

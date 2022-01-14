@@ -3,27 +3,42 @@ package carsharing;
 import carsharing.activities.MainActivity;
 import carsharing.database.DBConnector;
 import carsharing.database.DBManager;
+import carsharing.database.dao.DaoContainer;
 import carsharing.util.CliParser;
 
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Optional<String> fileName = new CliParser(args).optionOf("-fileName");
+        DBConnector dbConnector = null;
+        Scanner scanner = null;
 
-        if (fileName.isPresent()) {
-            DBConnector dbConnector = new DBConnector(fileName.get());
+        try {
+            String fileName = new CliParser(args).optionOf("-fileName")
+                    .orElseThrow(() -> new IllegalArgumentException("Incorrect option for -fileName"));
+
+            dbConnector = new DBConnector(fileName);
             DBManager dbManager = new DBManager(dbConnector);
-            Scanner scanner = new Scanner(System.in);
+            DaoContainer daoContainer = new DaoContainer(dbConnector);
+            scanner = new Scanner(System.in);
 
-            MainActivity mainActivity = new MainActivity(scanner, dbManager);
+            dbManager.migrateApp();
+
+            MainActivity mainActivity = new MainActivity(scanner, daoContainer, dbManager);
             mainActivity.start();
 
-            dbConnector.closeConnection();
-            scanner.close();
-        } else {
-            throw new IllegalArgumentException("Incorrect option for -fileName");
+        } catch (RuntimeException e) {
+            System.out.println("Execution of this application has stopped due to a runtime error: ");
+            System.out.println(e.getMessage());
+
+            e.printStackTrace();
+        } finally {
+            if (dbConnector != null) {
+                dbConnector.closeConnection();
+            }
+            if (scanner != null) {
+                scanner.close();
+            }
         }
     }
 }

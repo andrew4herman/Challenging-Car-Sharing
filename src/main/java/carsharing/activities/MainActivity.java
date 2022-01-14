@@ -1,6 +1,7 @@
 package carsharing.activities;
 
 import carsharing.database.DBManager;
+import carsharing.database.dao.DaoContainer;
 import carsharing.model.Customer;
 import carsharing.util.ChooserUtils;
 
@@ -9,10 +10,12 @@ import java.util.Scanner;
 
 public class MainActivity extends Activity {
 
+    private final DaoContainer daoContainer;
     private final DBManager dbManager;
 
-    public MainActivity(Scanner scanner, DBManager dbManager) {
+    public MainActivity(Scanner scanner, DaoContainer daoContainer, DBManager dbManager) {
         super(scanner);
+        this.daoContainer = daoContainer;
         this.dbManager = dbManager;
     }
 
@@ -39,17 +42,17 @@ public class MainActivity extends Activity {
     }
 
     private void logInAsManager() {
-        new ManagerActivity(scanner, dbManager).start();
+        new ManagerActivity(scanner, daoContainer).start();
     }
 
     private void logInAsCustomer() {
-        List<Customer> customers = dbManager.getCustomerDao().getAllCustomers();
+        List<Customer> customers = daoContainer.getCustomerDao().getAllCustomers();
         if (customers.isEmpty()) {
             System.out.println("The customer list is empty!");
         } else {
             System.out.println("The customer list:");
             ChooserUtils.chooseEntityFrom(customers, scanner).ifPresent(
-                    customer -> new CustomerActivity(scanner, dbManager, customer).start());
+                    customer -> new CustomerActivity(scanner, daoContainer, dbManager,customer).start());
         }
     }
 
@@ -57,7 +60,7 @@ public class MainActivity extends Activity {
         System.out.println("\nEnter the customer name:");
         String name = scanner.nextLine();
 
-        dbManager.getCustomerDao().save(name);
+        daoContainer.getCustomerDao().save(name);
         System.out.println("The customer was added!");
     }
 }

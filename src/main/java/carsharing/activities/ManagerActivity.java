@@ -1,6 +1,6 @@
 package carsharing.activities;
 
-import carsharing.database.DBManager;
+import carsharing.database.dao.DaoContainer;
 import carsharing.model.Company;
 import carsharing.util.ChooserUtils;
 
@@ -9,11 +9,11 @@ import java.util.Scanner;
 
 public class ManagerActivity extends Activity {
 
-    private final DBManager dbManager;
+    private final DaoContainer daoContainer;
 
-    public ManagerActivity(Scanner scanner, DBManager dbManager) {
+    public ManagerActivity(Scanner scanner, DaoContainer daoContainer) {
         super(scanner);
-        this.dbManager = dbManager;
+        this.daoContainer = daoContainer;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ManagerActivity extends Activity {
     }
 
     private void chooseCompanyOption() {
-        List<Company> companies = dbManager.getCompanyDao().getAll();
+        List<Company> companies = daoContainer.getCompanyDao().getAll();
         if (companies.isEmpty()) {
             System.out.println("The company list is empty!");
         } else {
@@ -45,7 +45,7 @@ public class ManagerActivity extends Activity {
             ChooserUtils.chooseEntityFrom(companies, scanner).ifPresent(
                     company -> {
                         System.out.printf("'%s' company", company.getName());
-                        new CompanyActivity(scanner, dbManager, company).start();
+                        new CompanyActivity(scanner, daoContainer, company).start();
                     });
         }
     }
@@ -54,7 +54,7 @@ public class ManagerActivity extends Activity {
         System.out.println("\nEnter the company name:");
         String companyName = scanner.nextLine();
 
-        dbManager.getCompanyDao().save(companyName);
+        daoContainer.getCompanyDao().save(companyName);
         System.out.println("The company was created!");
     }
 }

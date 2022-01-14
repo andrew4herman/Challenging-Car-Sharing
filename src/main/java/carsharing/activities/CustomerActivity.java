@@ -1,6 +1,7 @@
 package carsharing.activities;
 
 import carsharing.database.DBManager;
+import carsharing.database.dao.DaoContainer;
 import carsharing.model.Car;
 import carsharing.model.Company;
 import carsharing.model.Customer;
@@ -12,10 +13,12 @@ import java.util.Scanner;
 public class CustomerActivity extends Activity {
 
     private final Customer currentCustomer;
+    private final DaoContainer daoContainer;
     private final DBManager dbManager;
 
-    public CustomerActivity(Scanner scanner, DBManager dbManager, Customer customer) {
+    public CustomerActivity(Scanner scanner, DaoContainer daoContainer, DBManager dbManager, Customer customer) {
         super(scanner);
+        this.daoContainer = daoContainer;
         this.dbManager = dbManager;
         this.currentCustomer = customer;
     }
@@ -46,7 +49,7 @@ public class CustomerActivity extends Activity {
         if (hasRentedCar()) {
             System.out.println("You've already rented a car!");
         } else {
-            List<Company> companies = dbManager.getCompanyDao().getAll();
+            List<Company> companies = daoContainer.getCompanyDao().getAll();
             if (companies.isEmpty()) {
                 System.out.println("\nThe company list is empty!");
             } else {
@@ -58,7 +61,7 @@ public class CustomerActivity extends Activity {
 
     private void returnRentedCarOption() {
         if (hasRentedCar()) {
-            dbManager.getCarDao().getById(currentCustomer.getRentedCarId()).ifPresent(this::returnCar);
+            daoContainer.getCarDao().getById(currentCustomer.getRentedCarId()).ifPresent(this::returnCar);
         } else {
             System.out.println("You didn't rent a car!");
         }
@@ -66,14 +69,14 @@ public class CustomerActivity extends Activity {
 
     private void showRentedCarOption() {
         if (hasRentedCar()) {
-            dbManager.getCarDao().getById(currentCustomer.getRentedCarId()).ifPresent(this::outputInfoAbout);
+            daoContainer.getCarDao().getById(currentCustomer.getRentedCarId()).ifPresent(this::outputInfoAbout);
         } else {
             System.out.println("You didn't rent a car!");
         }
     }
 
     private void chooseCar(Company company) {
-        List<Car> cars = dbManager.getCarDao().getRentedCarsFrom(company.getId());
+        List<Car> cars = daoContainer.getCarDao().getRentedCarsFrom(company.getId());
         if (cars.isEmpty()) {
             System.out.println("\nThe car list is empty!");
         } else {
@@ -84,8 +87,8 @@ public class CustomerActivity extends Activity {
 
     private void returnCar(Car car) {
         dbManager.makeTransaction(() -> {
-            dbManager.getCustomerDao().updateCustomer(currentCustomer.getId(), 0);
-            dbManager.getCarDao().updateCar(car.getId(), false);
+            daoContainer.getCustomerDao().updateCustomer(currentCustomer.getId(), 0);
+            daoContainer.getCarDao().updateCar(car.getId(), false);
         });
         currentCustomer.setRentedCarId(0);
 
@@ -93,7 +96,7 @@ public class CustomerActivity extends Activity {
     }
 
     private void outputInfoAbout(Car car) {
-        String companyName = dbManager.getCompanyDao().getById(car.getCompanyId()).orElseThrow().getName();
+        String companyName = daoContainer.getCompanyDao().getById(car.getCompanyId()).orElseThrow().getName();
         System.out.printf("""
                                 
                 Your rented car:
@@ -109,8 +112,8 @@ public class CustomerActivity extends Activity {
 
     private void rentCar(Car car) {
         dbManager.makeTransaction(() -> {
-            dbManager.getCustomerDao().updateCustomer(currentCustomer.getId(), car.getId());
-            dbManager.getCarDao().updateCar(car.getId(), true);
+            daoContainer.getCustomerDao().updateCustomer(currentCustomer.getId(), car.getId());
+            daoContainer.getCarDao().updateCar(car.getId(), true);
         });
         currentCustomer.setRentedCarId(car.getId());
 

@@ -1,25 +1,37 @@
 package carsharing.database;
 
-import carsharing.database.dao.CarDao;
-import carsharing.database.dao.CompanyDao;
-import carsharing.database.dao.CustomerDao;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.sql.Statement;
 
 public class DBManager {
 
+    private static final String CREATE_TABLE_COMPANY = """
+            CREATE TABLE IF NOT EXISTS company(
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                name VARCHAR(64) UNIQUE NOT NULL
+            );""";
+    private static final String CREATE_TABLE_CAR = """
+            CREATE TABLE IF NOT EXISTS car(
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                name VARCHAR(64) NOT NULL UNIQUE,
+                company_id INT NOT NULL,
+                is_rented BOOLEAN NOT NULL DEFAULT FALSE,
+                FOREIGN KEY (company_id) REFERENCES company(id)
+            );""";
+    private static final String CREATE_TABLE_CUSTOMER = """
+            CREATE TABLE IF NOT EXISTS customer(
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                name VARCHAR(64) NOT NULL UNIQUE,
+                rented_car_id INT,
+                FOREIGN KEY (rented_car_id) REFERENCES car(id)
+            );""";
+
     private final DBConnector dbConnector;
-    private final CompanyDao companyDao;
-    private final CarDao carDao;
-    private final CustomerDao customerDao;
 
     public DBManager(DBConnector dbConnector) {
         this.dbConnector = dbConnector;
-        this.companyDao = new CompanyDao(dbConnector);
-        this.carDao = new CarDao(dbConnector);
-        this.customerDao = new CustomerDao(dbConnector);
     }
 
     public void makeTransaction(Runnable runnable) {
@@ -37,15 +49,15 @@ public class DBManager {
         }
     }
 
-    public CompanyDao getCompanyDao() {
-        return companyDao;
-    }
+    public void migrateApp() {
+        try (Statement statement = dbConnector.getConnection().createStatement()) {
+            statement.executeUpdate(CREATE_TABLE_COMPANY);
+            statement.executeUpdate(CREATE_TABLE_CAR);
+            statement.executeUpdate(CREATE_TABLE_CUSTOMER);
 
-    public CarDao getCarDao() {
-        return carDao;
-    }
-
-    public CustomerDao getCustomerDao() {
-        return customerDao;
+            dbConnector.getConnection().commit();
+        } catch (SQLException e) {
+            throw new RuntimeException("Cannot create tables", e);
+        }
     }
 }
