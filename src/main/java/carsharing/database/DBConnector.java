@@ -9,17 +9,14 @@ public class DBConnector {
     private static final String JDBC_DRIVER = "jdbc:h2:";
     private static final String FILE_PATH = "./src/main/java/carsharing/db/";
 
-    private final String USER;
-    private final String PASSWORD;
-    private final String URL;
+    private static final String USER = "root";
+    private static final String PASSWORD= "hyperskill";
+    private final String url;
 
     private Connection connection;
 
     public DBConnector(String fileName) {
-        USER = "root";
-        PASSWORD = "hyperskill";
-        URL = JDBC_DRIVER + FILE_PATH + fileName;
-
+        url = JDBC_DRIVER + FILE_PATH + fileName;
         tryToCreateConnection();
     }
 
