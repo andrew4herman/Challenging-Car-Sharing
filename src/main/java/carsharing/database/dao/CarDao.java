@@ -2,6 +2,7 @@ package carsharing.database.dao;
 
 import carsharing.database.DBConnector;
 import carsharing.model.Car;
+import carsharing.util.DatabaseException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,7 +40,7 @@ public class CarDao {
                         resultSet.getBoolean("is_rented")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot get from database a car with id " + id, e);
+            throw new DatabaseException("Cannot get from database a car with id " + id, e);
         }
         return Optional.empty();
     }
@@ -59,7 +60,7 @@ public class CarDao {
                         resultSet.getBoolean("is_rented")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot get cars from database", e);
+            throw new DatabaseException("Cannot get cars from database", e);
         }
 
         return cars;
@@ -80,7 +81,7 @@ public class CarDao {
                         resultSet.getBoolean("is_rented")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot get all rented/unrented cars from database", e);
+            throw new DatabaseException("Cannot get all rented/unrented cars from database", e);
         }
 
         return cars;
@@ -95,7 +96,7 @@ public class CarDao {
 
             dbConnector.getConnection().commit();
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot save car %s from company %d".formatted(name, companyId), e);
+            throw new DatabaseException("Cannot save car %s from company %d".formatted(name, companyId), e);
         }
     }
 
@@ -108,7 +109,7 @@ public class CarDao {
 
             dbConnector.getConnection().commit();
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot update car with id " + id, e);
+            throw new DatabaseException("Cannot update car with id " + id, e);
         }
     }
 }

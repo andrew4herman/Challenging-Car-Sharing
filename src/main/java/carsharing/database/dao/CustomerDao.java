@@ -2,6 +2,7 @@ package carsharing.database.dao;
 
 import carsharing.database.DBConnector;
 import carsharing.model.Customer;
+import carsharing.util.DatabaseException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,7 +37,7 @@ public class CustomerDao {
                 customers.add(new Customer(id, name, rentedCarId));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot get customers from database", e);
+            throw new DatabaseException("Cannot get customers from database", e);
         }
 
         return customers;
@@ -50,7 +51,7 @@ public class CustomerDao {
 
             dbConnector.getConnection().commit();
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot save customer " + name, e);
+            throw new DatabaseException("Cannot save customer " + name, e);
         }
     }
 
@@ -67,7 +68,7 @@ public class CustomerDao {
 
             dbConnector.getConnection().commit();
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot update customer with id" + id, e);
+            throw new DatabaseException("Cannot update customer with id" + id, e);
         }
     }
 }

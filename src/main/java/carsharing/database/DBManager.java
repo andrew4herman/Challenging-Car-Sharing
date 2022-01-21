@@ -1,5 +1,7 @@
 package carsharing.database;
 
+import carsharing.util.DatabaseException;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
@@ -39,13 +41,17 @@ public class DBManager {
             Connection connection = dbConnector.getConnection();
             Savepoint savepoint = connection.setSavepoint();
 
-            try {
-                runnable.run();
-            } catch (RuntimeException e) {
-                connection.rollback(savepoint);
-            }
+            tryToRun(runnable, connection, savepoint);
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot rollback to savepoint!", e);
+            throw new DatabaseException("Cannot rollback to savepoint!", e);
+        }
+    }
+
+    private void tryToRun(Runnable runnable, Connection connection, Savepoint savepoint) throws SQLException {
+        try {
+            runnable.run();
+        } catch (RuntimeException e) {
+            connection.rollback(savepoint);
         }
     }
 
@@ -57,7 +63,7 @@ public class DBManager {
 
             dbConnector.getConnection().commit();
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot create tables", e);
+            throw new DatabaseException("Cannot create tables", e);
         }
     }
 }

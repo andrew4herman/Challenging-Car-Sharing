@@ -2,6 +2,7 @@ package carsharing.database.dao;
 
 import carsharing.database.DBConnector;
 import carsharing.model.Company;
+import carsharing.util.DatabaseException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +14,7 @@ import java.util.Optional;
 public class CompanyDao {
 
     private static final String GET_BY_ID = "SELECT * FROM company WHERE id = ?;";
-    private static final String GET_All = "SELECT * FROM company;";
+    private static final String GET_ALL = "SELECT * FROM company;";
     private static final String SAVE_COMPANY = "INSERT INTO company(name) VALUES(?);";
 
     private final DBConnector dbConnector;
@@ -33,7 +34,7 @@ public class CompanyDao {
                         resultSet.getInt("id"), resultSet.getString("name")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot get from database a company with id " + id, e);
+            throw new DatabaseException("Cannot get from database a company with id " + id, e);
         }
         return Optional.empty();
     }
@@ -41,7 +42,7 @@ public class CompanyDao {
     public List<Company> getAll() {
         List<Company> companies = new ArrayList<>();
         try (PreparedStatement stmt =
-                     dbConnector.getConnection().prepareStatement(GET_All)) {
+                     dbConnector.getConnection().prepareStatement(GET_ALL)) {
             ResultSet resultSet = stmt.executeQuery();
 
             while (resultSet.next()) {
@@ -49,7 +50,7 @@ public class CompanyDao {
                         resultSet.getInt("id"), resultSet.getString("name")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot get companies from database", e);
+            throw new DatabaseException("Cannot get companies from database", e);
         }
 
         return companies;
@@ -63,7 +64,7 @@ public class CompanyDao {
 
             dbConnector.getConnection().commit();
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot save company " + name, e);
+            throw new DatabaseException("Cannot save company " + name, e);
         }
     }
 }

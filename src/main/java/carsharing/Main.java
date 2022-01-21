@@ -5,6 +5,7 @@ import carsharing.database.DBConnector;
 import carsharing.database.DBManager;
 import carsharing.database.dao.DaoContainer;
 import carsharing.util.CliParser;
+import carsharing.util.DatabaseException;
 
 import java.util.Scanner;
 
@@ -25,8 +26,8 @@ public class Main {
             MainActivity mainActivity = new MainActivity(scanner, daoContainer, dbManager);
             mainActivity.start();
 
-        } catch (RuntimeException e) {
-            System.out.println("Execution of this application has stopped due to a runtime error: ");
+        } catch (DatabaseException e) {
+            System.out.println("Execution of this application has stopped due to an error: ");
             System.out.println(e.getMessage());
 
             e.printStackTrace();

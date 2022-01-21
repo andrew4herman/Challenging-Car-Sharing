@@ -1,5 +1,7 @@
 package carsharing.database;
 
+import carsharing.util.DatabaseException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,17 +27,17 @@ public class DBConnector {
             try {
                 connection.close();
             } catch (SQLException e) {
-                throw new RuntimeException("Cannot close a connection with database!", e);
+                throw new DatabaseException("Cannot close a connection with database!", e);
             }
         }
     }
 
     private void tryToCreateConnection() {
         try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            connection = DriverManager.getConnection(url, USER, PASSWORD);
             connection.setAutoCommit(false);
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot create a connection with database!", e);
+            throw new DatabaseException("Cannot create a connection with database!", e);
         }
     }
 
