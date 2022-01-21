@@ -11,13 +11,12 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        DBConnector dbConnector = null;
+        String fileName = new CliParser(args).optionOf("-fileName")
+                .orElseThrow(() -> new IllegalArgumentException("Incorrect option for -fileName"));
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            String fileName = new CliParser(args).optionOf("-fileName")
-                    .orElseThrow(() -> new IllegalArgumentException("Incorrect option for -fileName"));
+        try (DBConnector dbConnector = new DBConnector(fileName);
+             Scanner scanner = new Scanner(System.in)) {
 
-            dbConnector = new DBConnector(fileName);
             DBManager dbManager = new DBManager(dbConnector);
             DaoContainer daoContainer = new DaoContainer(dbConnector);
 
@@ -31,10 +30,6 @@ public class Main {
             System.out.println(e.getMessage());
 
             e.printStackTrace();
-        } finally {
-            if (dbConnector != null) {
-                dbConnector.closeConnection();
-            }
         }
     }
 }

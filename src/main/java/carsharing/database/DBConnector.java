@@ -6,13 +6,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DBConnector {
+public class DBConnector implements AutoCloseable {
 
     private static final String JDBC_DRIVER = "jdbc:h2:";
     private static final String FILE_PATH = "./src/main/java/carsharing/db/";
 
     private static final String USER = "root";
-    private static final String PASSWORD= "hyperskill";
+    private static final String PASSWORD = "hyperskill";
     private final String url;
 
     private Connection connection;
@@ -22,7 +22,12 @@ public class DBConnector {
         tryToCreateConnection();
     }
 
-    public void closeConnection() {
+    public Connection getConnection() {
+        return connection;
+    }
+
+    @Override
+    public void close() {
         if (connection != null) {
             try {
                 connection.close();
@@ -39,9 +44,5 @@ public class DBConnector {
         } catch (SQLException e) {
             throw new DatabaseException("Cannot create a connection with database!", e);
         }
-    }
-
-    public Connection getConnection() {
-        return connection;
     }
 }
