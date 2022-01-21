@@ -13,7 +13,7 @@ public class ChooserUtils {
 
     public <T extends Entity> Optional<T> chooseEntityFrom(List<T> list, Scanner scanner) {
         do {
-            ChooserUtils.outputEntities(list);
+            ChooserUtils.printEntities(list);
             System.out.println("0. Back");
             try {
                 int option = Integer.parseInt(scanner.nextLine());
@@ -24,7 +24,7 @@ public class ChooserUtils {
         } while (true);
     }
 
-    public <T extends Entity> void outputEntities(List<T> list) {
+    public <T extends Entity> void printEntities(List<T> list) {
         IntStream.iterate(0, i -> i + 1)
                 .limit(list.size())
                 .forEach(i -> System.out.printf("%d. %s%n", i + 1, list.get(i).getName()));

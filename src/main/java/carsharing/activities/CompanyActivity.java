@@ -45,7 +45,7 @@ public class CompanyActivity extends Activity {
             System.out.println("The car list is empty!");
         } else {
             System.out.println("Car list:");
-            ChooserUtils.outputEntities(cars);
+            ChooserUtils.printEntities(cars);
         }
     }
 
