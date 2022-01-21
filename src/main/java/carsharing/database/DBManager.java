@@ -49,7 +49,7 @@ public class DBManager {
         }
     }
 
-    public void migrateApp() {
+    public void migrateUp() {
         try (Statement statement = dbConnector.getConnection().createStatement()) {
             statement.executeUpdate(CREATE_TABLE_COMPANY);
             statement.executeUpdate(CREATE_TABLE_CAR);
