@@ -20,6 +20,11 @@ public class CarDao {
     private static final String SAVE_CAR = "INSERT INTO car(name, company_id) VALUES(?, ?);";
     private static final String UPDATE_BY_ID = "UPDATE car SET is_rented = ? WHERE ID = ?;";
 
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_COMPANY_ID = "company_id";
+    private static final String COLUMN_RENTED = "is_rented";
+
     private final DBConnector dbConnector;
 
     public CarDao(DBConnector dbConnector) {
@@ -34,10 +39,10 @@ public class CarDao {
 
             if (resultSet.next()) {
                 return Optional.of(new Car(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getInt("company_id"),
-                        resultSet.getBoolean("is_rented")));
+                        resultSet.getInt(COLUMN_ID),
+                        resultSet.getString(COLUMN_NAME),
+                        resultSet.getInt(COLUMN_COMPANY_ID),
+                        resultSet.getBoolean(COLUMN_RENTED)));
             }
         } catch (SQLException e) {
             throw new DatabaseException("Cannot get from database a car with id " + id, e);
@@ -54,10 +59,10 @@ public class CarDao {
 
             while (resultSet.next()) {
                 cars.add(new Car(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getInt("company_id"),
-                        resultSet.getBoolean("is_rented")));
+                        resultSet.getInt(COLUMN_ID),
+                        resultSet.getString(COLUMN_NAME),
+                        resultSet.getInt(COLUMN_COMPANY_ID),
+                        resultSet.getBoolean(COLUMN_RENTED)));
             }
         } catch (SQLException e) {
             throw new DatabaseException("Cannot get cars from database", e);
@@ -75,10 +80,10 @@ public class CarDao {
 
             while (resultSet.next()) {
                 cars.add(new Car(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getInt("company_id"),
-                        resultSet.getBoolean("is_rented")));
+                        resultSet.getInt(COLUMN_ID),
+                        resultSet.getString(COLUMN_NAME),
+                        resultSet.getInt(COLUMN_COMPANY_ID),
+                        resultSet.getBoolean(COLUMN_RENTED)));
             }
         } catch (SQLException e) {
             throw new DatabaseException("Cannot get all rented/unrented cars from database", e);

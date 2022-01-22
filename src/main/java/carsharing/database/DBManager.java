@@ -47,14 +47,6 @@ public class DBManager {
         }
     }
 
-    private void tryToRun(Runnable runnable, Connection connection, Savepoint savepoint) throws SQLException {
-        try {
-            runnable.run();
-        } catch (RuntimeException e) {
-            connection.rollback(savepoint);
-        }
-    }
-
     public void migrateUp() {
         try (Statement statement = dbConnector.getConnection().createStatement()) {
             statement.executeUpdate(CREATE_TABLE_COMPANY);
@@ -64,6 +56,14 @@ public class DBManager {
             dbConnector.getConnection().commit();
         } catch (SQLException e) {
             throw new DatabaseException("Cannot create tables", e);
+        }
+    }
+
+    private void tryToRun(Runnable runnable, Connection connection, Savepoint savepoint) throws SQLException {
+        try {
+            runnable.run();
+        } catch (RuntimeException e) {
+            connection.rollback(savepoint);
         }
     }
 }
