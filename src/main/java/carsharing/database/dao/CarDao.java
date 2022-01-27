@@ -13,17 +13,19 @@ import java.util.Optional;
 
 public class CarDao {
 
-    private static final String GET_BY_ID = "SELECT * FROM car WHERE id = ?;";
-    private static final String GET_ALL_FROM_COMPANY = "SELECT * FROM car WHERE company_id = ?;";
+    private static final String GET_BY_ID =
+            "SELECT (ID, NAME, COMPANY_ID, IS_RENTED) FROM car WHERE id = ?;";
+    private static final String GET_ALL_FROM_COMPANY =
+            "SELECT (ID, NAME, COMPANY_ID, IS_RENTED) FROM car WHERE company_id = ?;";
     private static final String GET_RENTED_FROM_COMPANY =
-            "SELECT * FROM car WHERE is_rented = false AND company_id = ?;";
+            "SELECT (ID, NAME, COMPANY_ID, IS_RENTED) FROM car WHERE is_rented = false AND company_id = ?;";
     private static final String SAVE_CAR = "INSERT INTO car(name, company_id) VALUES(?, ?);";
     private static final String UPDATE_BY_ID = "UPDATE car SET is_rented = ? WHERE ID = ?;";
 
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_NAME = "name";
-    private static final String COLUMN_COMPANY_ID = "company_id";
-    private static final String COLUMN_RENTED = "is_rented";
+    private static final String COLUMN_ID = "ID";
+    private static final String COLUMN_NAME = "NAME";
+    private static final String COLUMN_COMPANY_ID = "COMPANY_ID";
+    private static final String COLUMN_RENTED = "IS_RENTED";
 
     private final DBConnector dbConnector;
 
