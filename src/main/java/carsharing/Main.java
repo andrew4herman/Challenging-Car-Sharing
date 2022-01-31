@@ -3,6 +3,9 @@ package carsharing;
 import carsharing.activities.MainActivity;
 import carsharing.database.DBConnector;
 import carsharing.database.DBManager;
+import carsharing.database.dao.CarDao;
+import carsharing.database.dao.CompanyDao;
+import carsharing.database.dao.CustomerDao;
 import carsharing.database.dao.DaoContainer;
 import carsharing.util.CliParser;
 import carsharing.util.DatabaseException;
@@ -18,9 +21,12 @@ public class Main {
              Scanner scanner = new Scanner(System.in)) {
 
             DBManager dbManager = new DBManager(dbConnector);
-            DaoContainer daoContainer = new DaoContainer(dbConnector);
-
             dbManager.migrateUp();
+
+            CompanyDao companyDao = new CompanyDao(dbConnector);
+            CarDao carDao = new CarDao(dbConnector);
+            CustomerDao customerDao = new CustomerDao(dbConnector);
+            DaoContainer daoContainer = new DaoContainer(companyDao, carDao, customerDao);
 
             MainActivity mainActivity = new MainActivity(scanner, daoContainer, dbManager);
             mainActivity.start();
