@@ -6,7 +6,7 @@ public abstract class Activity {
 
     public final Scanner scanner;
 
-    public Activity(Scanner scanner) {
+    Activity(Scanner scanner) {
         this.scanner = scanner;
     }
 
